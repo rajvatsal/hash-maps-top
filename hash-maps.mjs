@@ -120,5 +120,20 @@ export default function HashMap(bs) {
 		for (let i = 0; i < bucketSize; i++) buckets[i] = null;
 	}
 
-	return { hash, set, get, has, remove, length, clear };
+	function keys() {
+		const list = [];
+		for (let i = 0; i < bucketSize; i++) {
+			const bucket = buckets[i];
+			if (bucket === null) continue;
+
+			let node = bucket.getHead();
+			while (node !== null) {
+				list.push(node);
+				node = node.next;
+			}
+		}
+		return list;
+	}
+
+	return { hash, set, get, has, remove, length, clear, keys };
 }
