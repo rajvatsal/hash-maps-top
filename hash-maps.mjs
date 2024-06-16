@@ -76,5 +76,16 @@ export default function HashMap(bs) {
 		return null;
 	}
 
-	return { hash, set, get };
+	function has(key) {
+		const hashCode = hash(key);
+		if (hashCode > bucketSize || hashCode < 0) {
+			throw new Error("Trying to access index that is out of bounds");
+			return;
+		}
+		const bucket = buckets[hashCode];
+		if (bucket === null) return false;
+		return bucket.contains(key);
+	}
+
+	return { hash, set, get, has };
 }

@@ -55,11 +55,11 @@ export default function LinkedList(key, val) {
 		pop(node.next);
 	};
 
-	const contains = (val, node = head) => {
-		if (node.next === null) return val === node.value;
+	const contains = (key, node = head) => {
+		if (node.next === null) return key in node;
 
-		if (val === node.value) return true;
-		return contains(val, node.next);
+		if (key in node) return true;
+		return contains(key, node.next);
 	};
 
 	const find = (value, node = head, count = 0) => {
