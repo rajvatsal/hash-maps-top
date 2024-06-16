@@ -87,5 +87,22 @@ export default function HashMap(bs) {
 		return bucket.contains(key);
 	}
 
-	return { hash, set, get, has };
+	function remove(key) {
+		const hashCode = hash(key);
+		const bucket = buckets[hashCode];
+		if (bucket === null) return false;
+
+		let node = bucket.getHead();
+		while (true) {
+			if (key in node.next) {
+				const next = node.next.next;
+				node.next.next = null;
+				node.next = next;
+				return true;
+			} else if (node.next === null) return false;
+			node = node.next;
+		}
+	}
+
+	return { hash, set, get, has, remove };
 }
