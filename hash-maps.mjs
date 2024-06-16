@@ -153,8 +153,8 @@ export default function HashMap(bs) {
 				node = node.next;
 			}
 		}
-		return list;
+		return values;
 	}
 
-	return { hash, set, get, has, remove, length, clear, keys };
+	return { hash, set, get, has, remove, length, clear, keys, values };
 }
