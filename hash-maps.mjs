@@ -69,6 +69,7 @@ export default function HashMap(bs) {
 		}
 
 		const bucket = buckets[hashCode];
+		if (bucket === null) return null;
 		let node = bucket.getHead();
 
 		while (node !== null) {
@@ -115,5 +116,9 @@ export default function HashMap(bs) {
 		}
 	}
 
-	return { hash, set, get, has, remove, length };
+	function clear() {
+		for (let i = 0; i < bucketSize; i++) buckets[i] = null;
+	}
+
+	return { hash, set, get, has, remove, length, clear };
 }
