@@ -18,10 +18,13 @@ export default function HashMap(bs) {
 		return hashCode;
 	}
 
-	function getEntries() {
-		const count = 0;
-		for (let i = 0; i < buckets; i++) {
-			const node = buckets[i];
+	function length() {
+		let count = 0;
+		for (let i = 0; i < bucketSize; i++) {
+			const bucket = buckets[i];
+			if (bucket === null) continue;
+
+			let node = bucket.getHead();
 			while (node !== null) {
 				++count;
 				node = node.next;
@@ -31,7 +34,7 @@ export default function HashMap(bs) {
 	}
 
 	function incBuckets() {
-		if (loadFactor * bucketSize < getEntries()) bucketSize ** 2;
+		if (loadFactor * bucketSize < length()) bucketSize ** 2;
 	}
 
 	function set(key, value) {
@@ -87,22 +90,30 @@ export default function HashMap(bs) {
 		return bucket.contains(key);
 	}
 
+	const removeNode = (node) => {
+		const next = node.next.next;
+		node.next.next = null;
+		node.next = next;
+		return true;
+	};
+
 	function remove(key) {
 		const hashCode = hash(key);
 		const bucket = buckets[hashCode];
 		if (bucket === null) return false;
 
 		let node = bucket.getHead();
+		if (node.next === null) {
+			buckets[hashCode] = null;
+			return true;
+		} else if (key in node) return removeNode();
 		while (true) {
 			if (key in node.next) {
-				const next = node.next.next;
-				node.next.next = null;
-				node.next = next;
-				return true;
+				return removeNode(node);
 			} else if (node.next === null) return false;
 			node = node.next;
 		}
 	}
 
-	return { hash, set, get, has, remove };
+	return { hash, set, get, has, remove, length };
 }
