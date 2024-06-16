@@ -128,7 +128,10 @@ export default function HashMap(bs) {
 
 			let node = bucket.getHead();
 			while (node !== null) {
-				list.push(node);
+				for (let key in node) {
+					if (key === "next") continue;
+					list.push(key);
+				}
 				node = node.next;
 			}
 		}
