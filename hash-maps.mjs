@@ -156,5 +156,23 @@ export default function HashMap(bs) {
 		return values;
 	}
 
-	return { hash, set, get, has, remove, length, clear, keys, values };
+	function entries() {
+		const entries = [];
+		for (let i = 0; i < bucketSize; i++) {
+			const bucket = buckets[i];
+			if (bucket === null) continue;
+
+			let node = bucket.getHead();
+			while (node !== null) {
+				for (let key in node) {
+					if (key === "next") continue;
+					entries.push([key, node[key]]);
+				}
+				node = node.next;
+			}
+		}
+		return entries;
+	}
+
+	return { hash, set, get, has, remove, length, clear, keys, values, entries };
 }
