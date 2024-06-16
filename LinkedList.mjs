@@ -16,17 +16,16 @@ export default function LinkedList(key, val) {
 	};
 
 	const append = (key, value, node = head) => {
-		if (node === undefined) return;
 		if (node.next === null) {
 			node.next = Node(key, value, node);
 			tail = node.next;
 			return;
 		}
-		append(value, node.next);
+		append(key, value, node.next);
 	};
 
-	const prepend = (value = null, node = head) => {
-		head = Node(value, node);
+	const prepend = (key, value, node = head) => {
+		head = Node(key, value, node);
 	};
 
 	const size = (node = head) => {

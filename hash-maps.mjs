@@ -6,7 +6,7 @@ export default function HashMap(bs) {
 	const loadFactor = 0.8;
 
 	function hash(key) {
-		const hashCode = 0;
+		let hashCode = 0;
 
 		const primeNumber = 31;
 		for (let i = 0; i < key.length; i++) {
@@ -37,10 +37,44 @@ export default function HashMap(bs) {
 	function set(key, value) {
 		const hashCode = hash(key);
 		const bucket = buckets[hashCode];
-		if (bucket === null) bucket = ll(key, value);
-		else bucket.append(key, value);
+		if (bucket === null) buckets[hashCode] = ll(key, value);
+		else {
+			let node = bucket.getHead();
+			while (true) {
+				// break loop if key exists
+				if (key in node) {
+					node[key] = value;
+					break;
+				}
+				// just append key if it's the last node and key still doesn't exist
+				else if (node.next === null) {
+					bucket.append(key, value);
+					break;
+				}
+				node = node.next;
+			}
+		}
 		incBuckets();
 	}
 
-	return { hash, set };
+	function get(key) {
+		const hashCode = hash(key);
+
+		if (hashCode > bucketSize || hashCode < 0) {
+			throw new Error("Trying to access index that is out of bounds");
+			return;
+		}
+
+		const bucket = buckets[hashCode];
+		let node = bucket.getHead();
+
+		while (node !== null) {
+			if (key in node) return node[key];
+			node = node.next;
+		}
+		// return null if doesn't exist
+		return null;
+	}
+
+	return { hash, set, get };
 }
